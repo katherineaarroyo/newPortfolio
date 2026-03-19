@@ -1,8 +1,37 @@
 import './App.css'
 import profilePic from './assets/profile.png';
 import screens from './assets/4screens.png'
+import { useState, useEffect } from 'react';
 
 export default function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('overview');
+  
+  useEffect(() => {
+    if (!isModalOpen) return;
+
+    const handleScroll = (e: Event) => {
+      const sections = ['overview', 'problems', 'research', 'iterations', 'impact'];
+      const scrollContainer = e.target as HTMLElement;
+      
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const element = document.getElementById(sections[i]);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 200) {
+            setActiveSection(sections[i]);
+            break;
+          }
+        }
+      }
+    };
+
+    const modalContent = document.querySelector('.modal-scroll-container');
+    modalContent?.addEventListener('scroll', handleScroll);
+    
+    return () => modalContent?.removeEventListener('scroll', handleScroll);
+  }, [isModalOpen])
+
   return (
     <>
       <style>{`
@@ -181,8 +210,20 @@ export default function App() {
             flexDirection: 'row',
             gap: '50px',
             alignItems: 'center',
-            marginBottom: '100px'
-          }}>
+            marginBottom: '100px',
+            cursor: 'pointer',
+            transition: 'transform 0.2s, box-shadow 0.2s'
+          }}
+          onClick={() => setIsModalOpen(true)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)'
+            e.currentTarget.style.boxShadow = '0 8px 40px rgba(0, 0, 0, 0.2)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)'
+            e.currentTarget.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.1)'
+          }}
+          >
             <img src={screens} className="work-image" style={{ 
               width: '100%',
               maxWidth: '500px',
@@ -296,6 +337,334 @@ export default function App() {
             {/* Placeholder for signature/logo */}
           </div>
         </div>
+
+        {/* Modal */}
+        {isModalOpen && (
+          <div 
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000,
+              padding: '20px'
+            }}
+            onClick={() => setIsModalOpen(false)}
+          >
+            <div 
+              className='modal-scroll-container'
+              style={{
+                backgroundColor: '#2a2a2a',
+                borderRadius: '24px',
+                maxWidth: '1400px',
+                display: 'flex',
+                gap: '40px',
+                width: '100%',
+                maxHeight: '90vh',
+                overflow: 'auto',
+                position: 'relative',
+                padding: 'clamp(30px, 5vw, 60px) clamp(25px, 4vw, 50px)',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setIsModalOpen(false)}
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  backgroundColor: '#3a3a3a',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  color: '#ffffff',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4a4a4a'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3a3a3a'}
+              >
+                ×
+              </button>
+ 
+              {/* Progress Bar */}
+              <div style={{
+                position: 'sticky',
+                top: '60px',
+                width: '200px',
+                flexShrink: 0,
+                display: window.innerWidth < 900 ? 'none' : 'block'
+              }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  {[
+                    { id: 'overview', label: 'Overview' },
+                    { id: 'problems', label: 'The Problems' },
+                    { id: 'research', label: 'Competitor Research' },
+                    { id: 'iterations', label: 'Design Iterations' },
+                    { id: 'impact', label: 'Impact' }
+                  ].map((section) => (
+                    <a
+                      key={section.id}
+                      href={`#${section.id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      style={{
+                        fontSize: '14px',
+                        color: activeSection === section.id ? '#ffffff' : '#666',
+                        textDecoration: 'none',
+                        paddingLeft: '16px',
+                        borderLeft: activeSection === section.id ? '3px solid #ffffff' : '3px solid #333',
+                        transition: 'all 0.3s',
+                        cursor: 'pointer',
+                        fontWeight: activeSection === section.id ? 600 : 400
+                      }}
+                      onMouseEnter={(e) => {
+                        if (activeSection !== section.id) {
+                          e.currentTarget.style.color = '#999';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (activeSection !== section.id) {
+                          e.currentTarget.style.color = '#666';
+                        }
+                      }}
+                    >
+                      {section.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              {/* Modal content */}
+              <div style={{ color: '#ffffff', flex: 1 }}>
+                <div style={{ 
+                  fontSize: '12px',
+                  textTransform: 'uppercase',
+                  color: '#b8b8b8',
+                  letterSpacing: '1.5px',
+                  marginBottom: '12px'
+                }}>CASE STUDY</div>
+                
+                <h2 style={{ 
+                  fontSize: 'clamp(32px, 5vw, 48px)',
+                  fontWeight: 600,
+                  margin: '0 0 16px 0'
+                }}>Keep Her Safe — UX/UI Redesign</h2>
+ 
+                <p style={{
+                  fontSize: 'clamp(14px, 1.6vw, 16px)',
+                  color: '#b8b8b8',
+                  marginBottom: '40px',
+                  lineHeight: '1.5'
+                }}>
+                  Redesigning a personal safety app to be faster, more accessible, and genuinely usable in high-stress moments.
+                </p>
+ 
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gap: '16px',
+                  marginBottom: '40px'
+                }}>
+                  <div style={{
+                    backgroundColor: '#1a1a1a',
+                    padding: '20px',
+                    borderRadius: '12px'
+                  }}>
+                    <div style={{ fontSize: '12px', color: '#888', marginBottom: '8px', textTransform: 'uppercase' }}>Company</div>
+                    <div style={{ fontSize: '16px' }}>Sorora</div>
+                  </div>
+                  <div style={{
+                    backgroundColor: '#1a1a1a',
+                    padding: '20px',
+                    borderRadius: '12px'
+                  }}>
+                    <div style={{ fontSize: '12px', color: '#888', marginBottom: '8px', textTransform: 'uppercase' }}>My Role</div>
+                    <div style={{ fontSize: '16px' }}>Designer & Developer</div>
+                  </div>
+                  <div style={{
+                    backgroundColor: '#1a1a1a',
+                    padding: '20px',
+                    borderRadius: '12px'
+                  }}>
+                    <div style={{ fontSize: '12px', color: '#888', marginBottom: '8px', textTransform: 'uppercase' }}>Context</div>
+                    <div style={{ fontSize: '16px' }}>Senior Project</div>
+                  </div>
+                  <div style={{
+                    backgroundColor: '#FBF3E4',
+                    color: '#36291E',
+                    padding: '20px',
+                    borderRadius: '12px'
+                  }}>
+                    <div style={{ fontSize: '12px', color: '#36291E', marginBottom: '8px', textTransform: 'uppercase' }}>Read Time</div>
+                    <div style={{ fontSize: '16px' }}>5 minutes</div>
+                  </div>
+                </div>
+ 
+                <div style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '12px',
+                  marginBottom: '40px'
+                }}>
+                  <div style={{ backgroundColor: '#FBF3E4', color: '#36291E', borderRadius: '30px', padding: '10px 20px', fontSize: '13px' }}>UX Research</div>
+                  <div style={{ backgroundColor: '#FBF3E4', color: '#36291E', borderRadius: '30px', padding: '10px 20px', fontSize: '13px' }}>UI Design</div>
+                  <div style={{ backgroundColor: '#FBF3E4', color: '#36291E', borderRadius: '30px', padding: '10px 20px', fontSize: '13px' }}>Accessibility</div>
+                  <div style={{ backgroundColor: '#FBF3E4', color: '#36291E', borderRadius: '30px', padding: '10px 20px', fontSize: '13px' }}>Mobile Cross-Platform</div>
+                  <div style={{ backgroundColor: '#FBF3E4', color: '#36291E', borderRadius: '30px', padding: '10px 20px', fontSize: '13px' }}>Prototyping</div>
+                  <div style={{ backgroundColor: '#FBF3E4', color: '#36291E', borderRadius: '30px', padding: '10px 20px', fontSize: '13px' }}>Front-End Development</div>
+                </div>
+ 
+                <img src={screens} style={{ 
+                  width: '100%',
+                  height: 'auto',
+                  borderRadius: '12px',
+                  marginBottom: '50px'
+                }} alt="Sorora app screens" />
+ 
+                <div style={{ 
+                  fontSize: 'clamp(16px, 1.8vw, 18px)',
+                  lineHeight: '1.6',
+                  color: '#fff'
+                }}>
+                  <h3 id="overview" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '0', marginBottom: '20px', fontWeight: 600 }}>Overview</h3>
+                  <p style={{ marginBottom: '16px' }}>
+                    Keep Her Safe is a mobile safety app by Sorora that lets users instantly alert trusted contacts — and emergency services — if needed.
+                  </p>
+                  <p style={{ marginBottom: '16px' }}>
+                    A business team had built an MVP with live location tracking and a contact list. Our senior project team was brought in to:
+                  </p>
+                  <ul style={{ marginLeft: '20px', marginBottom: '30px' }}>
+                    <li style={{ marginBottom: '8px' }}>Implement missing core functionality</li>
+                    <li style={{ marginBottom: '8px' }}>Redesign the UI for usability and accessibility</li>
+                    <li style={{ marginBottom: '8px' }}>Establish a development workflow to support long-term growth</li>
+                  </ul>
+                  <p style={{ marginBottom: '40px' }}>
+                    As both a designer and developer, I worked across the full product lifecycle — from identifying problems to shipping the redesign.
+                  </p>
+ 
+                  <h3 id="problems" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600 }}>The problems</h3>
+                  <p style={{ marginBottom: '24px' }}>
+                    We evaluated the MVP against Jakob Nielsen's Usability Heuristics and found three critical issues:
+                  </p>
+ 
+                  <div style={{ backgroundColor: '#1a1a1a', padding: '24px', borderRadius: '12px', marginBottom: '20px' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginTop: '0', marginBottom: '16px', fontWeight: 600 }}>No user control or wayfinding</h4>
+                    <ul style={{ marginLeft: '20px', color: '#ccc' }}>
+                      <li style={{ marginBottom: '8px' }}>No visual indicators showing the user's current location in the app</li>
+                      <li style={{ marginBottom: '8px' }}>Navigation relied entirely on a back button — no save or exit options</li>
+                      <li style={{ marginBottom: '8px' }}>Violated "Recognition over Recall" by forcing users to mentally track their own flow</li>
+                    </ul>
+                  </div>
+ 
+                  <div style={{ backgroundColor: '#1a1a1a', padding: '24px', borderRadius: '12px', marginBottom: '20px' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginTop: '0', marginBottom: '16px', fontWeight: 600 }}>Accidental SOS triggers</h4>
+                    <ul style={{ marginLeft: '20px', color: '#ccc' }}>
+                      <li style={{ marginBottom: '8px' }}>Emergency button could be activated too easily, risking accidental contact with law enforcement</li>
+                      <li style={{ marginBottom: '8px' }}>Multi-step flows increased cognitive load in urgent situations</li>
+                      <li style={{ marginBottom: '8px' }}>No confirmation or error prevention in place</li>
+                    </ul>
+                  </div>
+ 
+                  <div style={{ backgroundColor: '#1a1a1a', padding: '24px', borderRadius: '12px', marginBottom: '40px' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginTop: '0', marginBottom: '16px', fontWeight: 600 }}>Visual overload, no hierarchy</h4>
+                    <ul style={{ marginLeft: '20px', color: '#ccc' }}>
+                      <li style={{ marginBottom: '8px' }}>No clear visual hierarchy — hard to identify the app's primary purpose at a glance</li>
+                      <li style={{ marginBottom: '8px' }}>Interactive and static elements looked the same</li>
+                      <li style={{ marginBottom: '8px' }}>Settings were fragmented across too many screens with minimal content per page</li>
+                    </ul>
+                  </div>
+ 
+                  <h3 id="research" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600 }}>Competitor research</h3>
+                  <p style={{ marginBottom: '16px' }}>
+                    Before designing, we looked at how others solved similar problems:
+                  </p>
+                  <ul style={{ marginLeft: '20px', marginBottom: '40px' }}>
+                    <li style={{ marginBottom: '8px' }}><strong>Life360</strong> — Referenced their navigation bar pattern for clear wayfinding</li>
+                    <li style={{ marginBottom: '8px' }}><strong>Noonlight</strong> — Their patented deadlock SOS feature (requiring sustained, deliberate interaction) directly informed our error prevention approach</li>
+                  </ul>
+ 
+                  <h3 id="iterations" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600 }}>Design iterations</h3>
+                  
+                  <div style={{ marginBottom: '30px' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Iteration 1</h4>
+                    <ul style={{ marginLeft: '20px', color: '#fff' }}>
+                      <li style={{ marginBottom: '8px' }}>Introduced a map-centric home page</li>
+                      <li style={{ marginBottom: '8px' }}>Established a pink color scheme</li>
+                      <li style={{ marginBottom: '8px' }}>Defined the key action pages</li>
+                    </ul>
+                  </div>
+ 
+                  <div style={{ marginBottom: '30px' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Iteration 2</h4>
+                    <ul style={{ marginLeft: '20px', color: '#fff' }}>
+                      <li style={{ marginBottom: '8px' }}>Doubled down on the pink color scheme</li>
+                      <li style={{ marginBottom: '8px' }}>Increased touch target and font sizes for better ergonomics</li>
+                    </ul>
+                  </div>
+ 
+                  <div style={{ marginBottom: '30px' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Iteration 3</h4>
+                    <ul style={{ marginLeft: '20px', color: '#fff' }}>
+                      <li style={{ marginBottom: '8px' }}>Replaced pink palette after it failed WCAG contrast standards</li>
+                      <li style={{ marginBottom: '8px' }}>Swapped column layout for a scrollable layout on contact/profile editing</li>
+                      <li style={{ marginBottom: '8px' }}>Added confirmation alerts for SOS and edit actions to prevent errors</li>
+                    </ul>
+                  </div>
+ 
+                  <div style={{ marginBottom: '40px' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Final</h4>
+                    <ul style={{ marginLeft: '20px', color: '#fff' }}>
+                      <li style={{ marginBottom: '8px' }}>Dropped Life360-style map view selector in favor of a cleaner button approach</li>
+                      <li style={{ marginBottom: '8px' }}>Added safeguards to the delete account flow</li>
+                      <li style={{ marginBottom: '8px' }}>Delivered the final design system</li>
+                    </ul>
+                  </div>
+ 
+                  <h3 id="impact" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600 }}>Impact</h3>
+                  <p style={{ marginBottom: '30px' }}>
+                    The redesign produced measurable gains across accessibility, ergonomics, and user performance:
+                  </p>
+ 
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                    gap: '20px',
+                    marginBottom: '30px',
+                    paddingBottom: '50px'
+                  }}>
+                    <div style={{ backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '12px' }}>
+                      <div style={{ fontSize: 'clamp(36px, 5vw, 48px)', fontWeight: 700, marginBottom: '12px', color: '#4ade80' }}>5.41:1</div>
+                      <div style={{ fontSize: '14px', color: '#fff' }}>Avg. color contrast — up from 3.31:1 to meet WCAG AA minimums</div>
+                    </div>
+                    <div style={{ backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '12px' }}>
+                      <div style={{ fontSize: 'clamp(36px, 5vw, 48px)', fontWeight: 700, marginBottom: '12px', color: '#4ade80' }}>48px</div>
+                      <div style={{ fontSize: '14px', color: '#fff' }}>Avg. touch target size — up from 40.5px minimum</div>
+                    </div>
+                    <div style={{ backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '12px' }}>
+                      <div style={{ fontSize: 'clamp(36px, 5vw, 48px)', fontWeight: 700, marginBottom: '12px', color: '#4ade80' }}>−70%</div>
+                      <div style={{ fontSize: '14px', color: '#fff' }}>Task completion time — down from 2:48 to 0:51 average</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </>
   )
