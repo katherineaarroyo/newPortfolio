@@ -1,6 +1,10 @@
 import './App.css'
 import profilePic from './assets/profile.png';
-import screens from './assets/4screens.png'
+import screens from './assets/4screens.png';
+import iterationOne from './assets/iterations/iterationOne/Interation1_4Screens.png';
+import iterationThree from './assets/iterations/iterationThree/Iteration3_2Screens.png';
+import iterationFinal from './assets/iterations/iterationFinal/iterationFinal_MapView.png';
+// import deleteAcctGif from './assets/iterations/iterationFinal/IterationFinal_DeleteAccount.gif';
 import { useState, useEffect } from 'react';
 
 export default function App() {
@@ -14,11 +18,20 @@ export default function App() {
       const sections = ['overview', 'problems', 'research', 'iterations', 'impact'];
       const scrollContainer = e.target as HTMLElement;
       
+      // Check if scrolled to bottom
+      const isAtBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop <= scrollContainer.clientHeight + 10;
+      
+      if (isAtBottom) {
+        setActiveSection('impact');
+        return;
+      }
+
       for (let i = sections.length - 1; i >= 0; i--) {
         const element = document.getElementById(sections[i]);
         if (element) {
           const rect = element.getBoundingClientRect();
-          if (rect.top <= 200) {
+          const containerRect = scrollContainer.getBoundingClientRect();
+          if (rect.top - containerRect.top <= 200) {
             setActiveSection(sections[i]);
             break;
           }
@@ -471,7 +484,7 @@ export default function App() {
                   marginBottom: '40px',
                   lineHeight: '1.5'
                 }}>
-                  Redesigning a personal safety app to be faster, more accessible, and genuinely usable in high-stress moments.
+                  Redesigning a personal safety app to be faster, more accessible, and usable in high-stress situations.
                 </p>
  
                 <div style={{
@@ -562,27 +575,27 @@ export default function App() {
                     We evaluated the MVP against Jakob Nielsen's Usability Heuristics and found three critical issues:
                   </p>
  
-                  <div style={{ backgroundColor: '#1a1a1a', padding: '24px', borderRadius: '12px', marginBottom: '20px' }}>
-                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginTop: '0', marginBottom: '16px', fontWeight: 600 }}>No user control or wayfinding</h4>
-                    <ul style={{ marginLeft: '20px', color: '#ccc' }}>
+                  <div style={{ backgroundColor: '#FBF3E4', padding: '24px', borderRadius: '12px', marginBottom: '20px' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginTop: '0', marginBottom: '16px', fontWeight: 600, color: '#36291E' }}>No user control or wayfinding</h4>
+                    <ul style={{ marginLeft: '20px', marginBottom: 0,  color: '#36291E' }}>
                       <li style={{ marginBottom: '8px' }}>No visual indicators showing the user's current location in the app</li>
                       <li style={{ marginBottom: '8px' }}>Navigation relied entirely on a back button — no save or exit options</li>
                       <li style={{ marginBottom: '8px' }}>Violated "Recognition over Recall" by forcing users to mentally track their own flow</li>
                     </ul>
                   </div>
  
-                  <div style={{ backgroundColor: '#1a1a1a', padding: '24px', borderRadius: '12px', marginBottom: '20px' }}>
-                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginTop: '0', marginBottom: '16px', fontWeight: 600 }}>Accidental SOS triggers</h4>
-                    <ul style={{ marginLeft: '20px', color: '#ccc' }}>
+                  <div style={{ backgroundColor: '#FBF3E4', padding: '24px', borderRadius: '12px', marginBottom: '20px' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginTop: '0', marginBottom: '16px', fontWeight: 600, color: '#36291E' }}>Accidental SOS triggers</h4>
+                    <ul style={{ marginLeft: '20px', marginBottom: 0, color: '#36291E' }}>
                       <li style={{ marginBottom: '8px' }}>Emergency button could be activated too easily, risking accidental contact with law enforcement</li>
                       <li style={{ marginBottom: '8px' }}>Multi-step flows increased cognitive load in urgent situations</li>
                       <li style={{ marginBottom: '8px' }}>No confirmation or error prevention in place</li>
                     </ul>
                   </div>
  
-                  <div style={{ backgroundColor: '#1a1a1a', padding: '24px', borderRadius: '12px', marginBottom: '40px' }}>
-                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginTop: '0', marginBottom: '16px', fontWeight: 600 }}>Visual overload, no hierarchy</h4>
-                    <ul style={{ marginLeft: '20px', color: '#ccc' }}>
+                  <div style={{ backgroundColor: '#FBF3E4', padding: '24px', borderRadius: '12px', marginBottom: '30px' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginTop: '0', marginBottom: '16px', fontWeight: 600, color: '#36291E' }}>Visual overload, no hierarchy</h4>
+                    <ul style={{ marginLeft: '20px', marginBottom: 0, color: '#36291E' }}>
                       <li style={{ marginBottom: '8px' }}>No clear visual hierarchy — hard to identify the app's primary purpose at a glance</li>
                       <li style={{ marginBottom: '8px' }}>Interactive and static elements looked the same</li>
                       <li style={{ marginBottom: '8px' }}>Settings were fragmented across too many screens with minimal content per page</li>
@@ -600,39 +613,66 @@ export default function App() {
  
                   <h3 id="iterations" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600 }}>Design iterations</h3>
                   
-                  <div style={{ marginBottom: '30px' }}>
+                  <div style={{marginBottom: '10px'}}>
                     <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Iteration 1</h4>
-                    <ul style={{ marginLeft: '20px', color: '#fff' }}>
+                    <ol style={{ marginLeft: '20px'}}>
                       <li style={{ marginBottom: '8px' }}>Introduced a map-centric home page</li>
                       <li style={{ marginBottom: '8px' }}>Established a pink color scheme</li>
                       <li style={{ marginBottom: '8px' }}>Defined the key action pages</li>
-                    </ul>
+                    </ol>
+
+                    <img src={iterationOne} style={{ 
+                      width: '100%',
+                      height: 'auto',
+                      borderRadius: '12px',
+                      marginBottom: '5px'
+                    }} alt="Sorora app design iteration one" />
                   </div>
  
-                  <div style={{ marginBottom: '30px' }}>
+                  <div style={{ marginBottom: '10px' }}>
                     <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Iteration 2</h4>
-                    <ul style={{ marginLeft: '20px', color: '#fff' }}>
+                    <ol style={{ marginLeft: '20px', color: '#fff' }}>
                       <li style={{ marginBottom: '8px' }}>Doubled down on the pink color scheme</li>
                       <li style={{ marginBottom: '8px' }}>Increased touch target and font sizes for better ergonomics</li>
-                    </ul>
+                    </ol>
                   </div>
  
                   <div style={{ marginBottom: '30px' }}>
                     <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Iteration 3</h4>
-                    <ul style={{ marginLeft: '20px', color: '#fff' }}>
+                    <ol style={{ marginLeft: '20px', color: '#fff' }}>
                       <li style={{ marginBottom: '8px' }}>Replaced pink palette after it failed WCAG contrast standards</li>
                       <li style={{ marginBottom: '8px' }}>Swapped column layout for a scrollable layout on contact/profile editing</li>
                       <li style={{ marginBottom: '8px' }}>Added confirmation alerts for SOS and edit actions to prevent errors</li>
-                    </ul>
+                    </ol>
+
+                    <img src={iterationThree} style={{ 
+                      width: '50%',
+                      height: 'auto',
+                      borderRadius: '12px',
+                      marginBottom: '10px'
+                    }} alt="Sorora app design iteration three" />
                   </div>
  
                   <div style={{ marginBottom: '40px' }}>
                     <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Final</h4>
-                    <ul style={{ marginLeft: '20px', color: '#fff' }}>
+                    <ol style={{ marginLeft: '20px', color: '#fff' }}>
                       <li style={{ marginBottom: '8px' }}>Dropped Life360-style map view selector in favor of a cleaner button approach</li>
                       <li style={{ marginBottom: '8px' }}>Added safeguards to the delete account flow</li>
-                      <li style={{ marginBottom: '8px' }}>Delivered the final design system</li>
-                    </ul>
+                    </ol>
+
+                    <img src={iterationFinal} style={{ 
+                      width: '50%',
+                      height: 'auto',
+                      borderRadius: '12px',
+                      marginBottom: '10px'
+                    }} alt="Sorora app design iteration three" />
+                    {/* <img src={deleteAcctGif} style={{ 
+                      width: '50%',
+                      height: 'auto',
+                      borderRadius: '12px',
+                      marginBottom: '50px',
+                    }} alt="Sorora app design iteration three" /> */}
+
                   </div>
  
                   <h3 id="impact" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600 }}>Impact</h3>
