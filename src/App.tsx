@@ -1,7 +1,8 @@
 import './App.css'
-import profilePic from './assets/profile.png';
+import profilePicLight from './assets/profile_light.png';
+import profilePicDark from './assets/profile_dark.png';
 import screens from './assets/4screens.png';
-import iterationOne from './assets/iterations/iterationOne/Interation1_4Screens.png';
+import iterationOne from './assets/iterations/iterationOne/Iteration1_4Screens.png';
 import iterationThree from './assets/iterations/iterationThree/Iteration3_2Screens.png';
 import iterationFinal from './assets/iterations/iterationFinal/iterationFinal_MapView.png';
 // import deleteAcctGif from './assets/iterations/iterationFinal/IterationFinal_DeleteAccount.gif';
@@ -10,6 +11,71 @@ import { useState, useEffect } from 'react';
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('overview');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  });
+  
+  // device preference changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      setTheme(e.matches ? 'dark' : 'light');
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+  
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+ 
+  const colors = {
+    light: {
+      bg: '#f5f5f5',
+      intro: '#472e10',
+      text: '#1a1a1a',
+      cardBg: '#ffffff',
+      cardBorder: 'rgba(0, 0, 0, 0.1)',
+      tagBg: '#36291E',
+      tagText: '#FBF3E4',
+      navBg: 'rgba(255, 255, 255, 0.8)',
+      navBorder: 'rgba(0, 0, 0, 0.1)',
+      subtitle: '#808368',
+      modalBg: '#ffffff',
+      modalOverlay: 'rgba(0, 0, 0, 0.6)',
+      progressInactive: '#ccc',
+      sectionBg: '#f9f9f9',
+      metricBg: '#f0f0f0'
+    },
+    dark: {
+      bg: '#1a1a1a',
+      intro: '#ffffff',
+      text: '#ffffff',
+      cardBg: '#2a2a2a',
+      cardBorder: 'rgba(255, 255, 255, 0.3)',
+      tagBg: '#FBF3E4',
+      tagText: '#36291E',
+      navBg: 'rgba(58, 58, 58, 0.8)',
+      navBorder: 'rgba(255, 255, 255, 0.3)',
+      subtitle: '#c6caa0',
+      modalBg: '#2a2a2a',
+      modalOverlay: 'rgba(0, 0, 0, 0.8)',
+      progressInactive: '#666',
+      sectionBg: '#1a1a1a',
+      metricBg: '#1a1a1a'
+    }
+  };
+ 
+  const c = colors[theme];
+
+  useEffect(() => {
+    document.body.style.backgroundColor = c.bg;
+    document.body.style.transition = 'background-color 0.3s';
+  }, [theme, c.bg]);
   
   useEffect(() => {
     if (!isModalOpen) return;
@@ -83,10 +149,11 @@ export default function App() {
         flexDirection: 'column', 
         alignItems: 'center', 
         width: '100%',
-        backgroundColor: '#1a1a1a',
-        color: '#ffffff',
+        backgroundColor: c.bg,
+        color: c.text,
         minHeight: '100vh',
-        padding: '40px 0'
+        padding: '40px 0',
+        transition: 'background-color 0.3s, color 0.3s'
       }}>
         {/* nav bar */}
         <nav style={{ 
@@ -100,48 +167,55 @@ export default function App() {
           padding: '0 40px'
         }}>
           <div style={{
-            backgroundColor: '#3a3a3a',
+            backgroundColor: c.navBg,
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
             boxShadow:'0 4px 30px rgba(0, 0, 0, 0.1)',
-            border: '.25px solid rgba(255, 255, 255, 0.3)',
+            border: `.25px solid ${c.navBorder}`,
             borderRadius: '50px',
             padding: '12px 30px',
             display: 'flex',
-            gap: '30px'
+            gap: '30px',
+            transition: 'all 0.3s'
           }}>
             <a href='#about' style={{ 
               fontSize: '16px',
-              color: '#ffffff',
-              textDecoration: 'none'
+              color: c.text,
+              textDecoration: 'none',
+              transition: 'color 0.3s'
             }}>about</a>
             <a href='#contact' style={{ 
               fontSize: '16px',
-              color: '#ffffff',
-              textDecoration: 'none'
+              color: c.text,
+              textDecoration: 'none',
+              transition: 'color 0.3s'
             }}>contact</a>
           </div>
-          <div style={{
-            backgroundColor: '#3a3a3a',
+          <button 
+          onClick={toggleTheme}
+          style={{
+            backgroundColor: c.navBg,
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
             boxShadow:'0 4px 30px rgba(0, 0, 0, 0.1)',
-            border: '.25px solid rgba(255, 255, 255, 0.3)',
+            border: `.25px solid ${c.navBorder}`,
             borderRadius: '50%',
             width: '48px',
             height: '48px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            flexShrink: 0
+            flexShrink: 0,
+            cursor: 'pointer',
+            transition: 'all 0.3s',
           }}>
             <div style={{
-              width: '24px',
-              height: '24px',
-              borderRadius: '50%',
-              background: 'linear-gradient(to right, #ffffff 50%, #1a1a1a 50%)'
-            }}></div>
-          </div>
+              fontSize: '20px',
+              transition: 'transform 0.3s'
+            }}>
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </div>
+          </button>
         </nav>
 
         {/* intro */}
@@ -154,7 +228,7 @@ export default function App() {
           maxWidth: '1400px',
           padding: '0 40px'
         }}>
-          <img src={profilePic} style={{ 
+          <img src={theme === 'dark' ? profilePicLight : profilePicDark} style={{ 
             width: '100%',
             maxWidth: '450px',
             minWidth: '300px',
@@ -171,27 +245,32 @@ export default function App() {
           }}>
             <h1 style={{ 
               fontSize: 'clamp(40px, 5vw, 64px)', 
+              color: c.intro,
               fontWeight: 600, 
               margin: 0, 
               padding: 0,
               lineHeight: '1.1',
-              marginBottom: '8px'
+              marginBottom: '8px',
+              transition: 'color 0.3s'
             }}>hello there!</h1>
             <h1 style={{ 
               fontSize: 'clamp(40px, 5vw, 64px)', 
+              color: c.intro,
               fontWeight: 600, 
               margin: 0, 
               padding: 0,
               lineHeight: '1.1',
-              marginBottom: '24px'
+              marginBottom: '24px',
+              transition: 'color 0.3s'
             }}>i'm katherine arroyo.</h1>
             <h3 style={{ 
               fontSize: 'clamp(24px, 3vw, 40px)', 
               fontWeight: 400, 
-              color: '#b8b8b8',
+              color: c.subtitle,
               margin: 0,
               fontStyle: 'italic',
-              lineHeight: '1.3'
+              lineHeight: '1.3',
+              transition: 'color 0.3s'
             }}>
               bridging <em style={{ fontStyle: 'italic' }}>product design</em> and<br/>
               <em style={{ fontStyle: 'italic' }}>front-end development</em>
@@ -209,14 +288,15 @@ export default function App() {
             fontSize: 'clamp(36px, 5vw, 45px)', 
             fontWeight: 600,
             textAlign: 'center',
-            margin: '0 0 20px'
+            margin: '0 0 20px',
+            transition: 'color 0.3s'
           }}>Selected Works</h2>
           <div className="work-card" style={{ 
-            backgroundColor: '#2a2a2a',
+            backgroundColor: c.cardBg,
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
             boxShadow:'0 4px 30px rgba(0, 0, 0, 0.1)',
-            border: '.25px solid rgba(255, 255, 255, 0.3)',
+            border: `.25px solid ${c.cardBorder}`,
             borderRadius: '24px',
             padding: '50px',
             display: 'flex',
@@ -225,7 +305,7 @@ export default function App() {
             alignItems: 'center',
             marginBottom: '100px',
             cursor: 'pointer',
-            transition: 'transform 0.2s, box-shadow 0.2s'
+            transition: 'transform 0.2s, box-shadow 0.2s, background-color 0.3s'
           }}
           onClick={() => setIsModalOpen(true)}
           onMouseEnter={(e) => {
@@ -254,33 +334,37 @@ export default function App() {
               <div style={{ 
                 fontSize: '14px',
                 textTransform: 'uppercase',
-                color: '#b8b8b8',
+                color: c.subtitle,
                 letterSpacing: '1.5px',
-                marginBottom: '12px'
+                marginBottom: '12px',
+                transition: 'color 0.3s'
               }}>REDESIGN</div>
               <h4 style={{ 
                 margin: 0,
                 padding: 0,
                 fontSize: 'clamp(36px, 5vw, 50px)',
                 fontWeight: 600,
-                marginBottom: '20px'
+                marginBottom: '20px',
+                transition: 'color 0.3s'
               }}>Sorora</h4>
               <div style={{
-                backgroundColor: '#3a3a3a',
+                backgroundColor: c.navBg,
                 backdropFilter: 'blur(10px)',
                 WebkitBackdropFilter: 'blur(10px)',
                 boxShadow:'0 4px 30px rgba(0, 0, 0, 0.1)',
-                border: '.25px solid rgba(255, 255, 255, 0.3)',
+                border: `.25px solid ${c.cardBorder}`,
                 borderRadius: '50px',
                 padding: '10px 24px',
                 display: 'inline-block',
                 width: 'fit-content',
-                marginBottom: '30px'
+                marginBottom: '30px',
+                transition: 'all 0.3s'
               }}>
                 <p style={{ 
                   fontSize: '14px',
                   margin: 0,
-                  color: '#ffffff'
+                  color: c.text,
+                  transition: 'color 0.3s'
                 }}>Case Study</p>
               </div>
               <div className="tag-container" style={{ 
@@ -290,10 +374,11 @@ export default function App() {
                 justifyContent: 'flex-start'
               }}>
                 <div style={{ 
-                  backgroundColor: '#FBF3E4',
-                  color: '#36291E',
+                  backgroundColor: c.tagBg,
+                  color: c.tagText,
                   borderRadius: '30px',
-                  padding: '12px 24px'
+                  padding: '12px 24px',
+                  transition: 'all 0.3s'
                 }}>
                   <p style={{ 
                     fontSize: '14px',
@@ -301,10 +386,11 @@ export default function App() {
                   }}>Accessibility</p>
                 </div>
                 <div style={{ 
-                  backgroundColor: '#FBF3E4',
-                  color: '#36291E',
+                  backgroundColor: c.tagBg,
+                  color: c.tagText,
                   borderRadius: '30px',
-                  padding: '12px 24px'
+                  padding: '12px 24px',
+                  transition: 'all 0.3s'
                 }}>
                   <p style={{ 
                     fontSize: '14px',
@@ -312,10 +398,11 @@ export default function App() {
                   }}>Error Prevention</p>
                 </div>
                 <div style={{ 
-                  backgroundColor: '#FBF3E4',
-                  color: '#36291E',
+                  backgroundColor: c.tagBg,
+                  color: c.tagText,
                   borderRadius: '30px',
-                  padding: '12px 24px'
+                  padding: '12px 24px',
+                  transition: 'all 0.3s'
                 }}>
                   <p style={{ 
                     fontSize: '14px',
@@ -341,7 +428,8 @@ export default function App() {
           <h2 style={{
             fontSize: 'clamp(28px, 4vw, 36px)',
             fontWeight: 600,
-            margin: 0
+            margin: 0,
+            transition: 'color 0.3s'
           }}>Let's get in touch.</h2>
           <div style={{
             width: '60px',
@@ -360,19 +448,20 @@ export default function App() {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              backgroundColor: c.modalOverlay,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               zIndex: 1000,
-              padding: '20px'
+              padding: '20px',
+              transition: 'background-color 0.3s'
             }}
             onClick={() => setIsModalOpen(false)}
           >
             <div 
               className='modal-scroll-container'
               style={{
-                backgroundColor: '#2a2a2a',
+                backgroundColor: c.modalBg,
                 borderRadius: '24px',
                 maxWidth: '1400px',
                 display: 'flex',
@@ -382,7 +471,8 @@ export default function App() {
                 overflow: 'auto',
                 position: 'relative',
                 padding: 'clamp(30px, 5vw, 60px) clamp(25px, 4vw, 50px)',
-                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+                transition: 'background-color 0.3s'
               }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -393,21 +483,21 @@ export default function App() {
                   position: 'absolute',
                   top: '20px',
                   right: '20px',
-                  backgroundColor: '#3a3a3a',
+                  backgroundColor: c.navBg,
                   border: 'none',
                   borderRadius: '50%',
                   width: '40px',
                   height: '40px',
-                  color: '#ffffff',
+                  color: c.text,
                   fontSize: '24px',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  transition: 'background-color 0.2s'
+                  transition: 'all 0.3s'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4a4a4a'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3a3a3a'}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
               >
                 ×
               </button>
@@ -437,22 +527,22 @@ export default function App() {
                       }}
                       style={{
                         fontSize: '14px',
-                        color: activeSection === section.id ? '#ffffff' : '#666',
+                        color: activeSection === section.id ? c.text : c.progressInactive,
+                        borderLeft: activeSection === section.id ? `3px solid ${c.text}` : `3px solid ${c.progressInactive}`,
                         textDecoration: 'none',
                         paddingLeft: '16px',
-                        borderLeft: activeSection === section.id ? '3px solid #ffffff' : '3px solid #333',
                         transition: 'all 0.3s',
                         cursor: 'pointer',
                         fontWeight: activeSection === section.id ? 600 : 400
                       }}
                       onMouseEnter={(e) => {
                         if (activeSection !== section.id) {
-                          e.currentTarget.style.color = '#999';
+                          e.currentTarget.style.color = c.subtitle;
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (activeSection !== section.id) {
-                          e.currentTarget.style.color = '#666';
+                          e.currentTarget.style.color = c.progressInactive;
                         }
                       }}
                     >
@@ -463,24 +553,27 @@ export default function App() {
               </div>
 
               {/* Modal content */}
-              <div style={{ color: '#ffffff', flex: 1 }}>
+              <div style={{ color: c.text, flex: 1, transition: 'color 0.3s' }}>
                 <div style={{ 
                   fontSize: '12px',
                   textTransform: 'uppercase',
-                  color: '#b8b8b8',
+                  color: c.subtitle,
                   letterSpacing: '1.5px',
-                  marginBottom: '12px'
+                  marginBottom: '12px',
+                  transition: 'color 0.3s'
                 }}>CASE STUDY</div>
                 
                 <h2 style={{ 
                   fontSize: 'clamp(32px, 5vw, 48px)',
                   fontWeight: 600,
-                  margin: '0 0 16px 0'
+                  margin: '0 0 16px 0',
+                  transition: 'color 0.3s'
                 }}>Keep Her Safe — UX/UI Redesign</h2>
  
                 <p style={{
                   fontSize: 'clamp(14px, 1.6vw, 16px)',
-                  color: '#b8b8b8',
+                  color: c.subtitle,
+                  transition: 'color 0.3s',
                   marginBottom: '40px',
                   lineHeight: '1.5'
                 }}>
@@ -494,28 +587,31 @@ export default function App() {
                   marginBottom: '40px'
                 }}>
                   <div style={{
-                    backgroundColor: '#1a1a1a',
+                    backgroundColor: c.sectionBg,
                     padding: '20px',
-                    borderRadius: '12px'
+                    borderRadius: '12px',
+                    transition: 'background-color 0.3s'
                   }}>
-                    <div style={{ fontSize: '12px', color: '#888', marginBottom: '8px', textTransform: 'uppercase' }}>Company</div>
-                    <div style={{ fontSize: '16px' }}>Sorora</div>
+                    <div style={{ fontSize: '12px', color: c.subtitle, marginBottom: '8px', textTransform: 'uppercase', transition: 'color 0.3s' }}>Company</div>
+                    <div style={{ fontSize: '16px', transition: 'color 0.3s' }}>Sorora</div>
                   </div>
                   <div style={{
-                    backgroundColor: '#1a1a1a',
+                    backgroundColor: c.sectionBg,
                     padding: '20px',
-                    borderRadius: '12px'
+                    borderRadius: '12px',
+                    transition: 'background-color 0.3s'
                   }}>
-                    <div style={{ fontSize: '12px', color: '#888', marginBottom: '8px', textTransform: 'uppercase' }}>My Role</div>
-                    <div style={{ fontSize: '16px' }}>Designer & Developer</div>
+                    <div style={{ fontSize: '12px', color: c.subtitle, marginBottom: '8px', textTransform: 'uppercase', transition: 'color 0.3s' }}>My Role</div>
+                    <div style={{ fontSize: '16px', transition: 'color 0.3s' }}>Designer & Developer</div>
                   </div>
                   <div style={{
-                    backgroundColor: '#1a1a1a',
+                    backgroundColor: c.sectionBg,
                     padding: '20px',
-                    borderRadius: '12px'
+                    borderRadius: '12px',
+                    transition: 'background-color 0.3s'
                   }}>
-                    <div style={{ fontSize: '12px', color: '#888', marginBottom: '8px', textTransform: 'uppercase' }}>Context</div>
-                    <div style={{ fontSize: '16px' }}>Senior Project</div>
+                    <div style={{ fontSize: '12px', color: c.subtitle, marginBottom: '8px', textTransform: 'uppercase', transition: 'color 0.3s' }}>Context</div>
+                    <div style={{ fontSize: '16px', transition: 'color 0.3s' }}>Senior Project</div>
                   </div>
                   <div style={{
                     backgroundColor: '#FBF3E4',
@@ -552,9 +648,10 @@ export default function App() {
                 <div style={{ 
                   fontSize: 'clamp(16px, 1.8vw, 18px)',
                   lineHeight: '1.6',
-                  color: '#fff'
+                  color: c.text,
+                  transition: 'color 0.3s'
                 }}>
-                  <h3 id="overview" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '0', marginBottom: '20px', fontWeight: 600 }}>Overview</h3>
+                  <h3 id="overview" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '0', marginBottom: '20px', fontWeight: 600, transition: 'color 0.3s' }}>Overview</h3>
                   <p style={{ marginBottom: '16px' }}>
                     Keep Her Safe is a mobile safety app by Sorora that lets users instantly alert trusted contacts — and emergency services — if needed.
                   </p>
@@ -570,7 +667,7 @@ export default function App() {
                     As both a designer and developer, I worked across the full product lifecycle — from identifying problems to shipping the redesign.
                   </p>
  
-                  <h3 id="problems" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600 }}>The problems</h3>
+                  <h3 id="problems" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600, transition: 'color 0.3s' }}>The problems</h3>
                   <p style={{ marginBottom: '24px' }}>
                     We evaluated the MVP against Jakob Nielsen's Usability Heuristics and found three critical issues:
                   </p>
@@ -602,7 +699,7 @@ export default function App() {
                     </ul>
                   </div>
  
-                  <h3 id="research" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600 }}>Competitor research</h3>
+                  <h3 id="research" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600, transition: 'color 0.3s' }}>Competitor research</h3>
                   <p style={{ marginBottom: '16px' }}>
                     Before designing, we looked at how others solved similar problems:
                   </p>
@@ -611,10 +708,10 @@ export default function App() {
                     <li style={{ marginBottom: '8px' }}><strong>Noonlight</strong> — Their patented deadlock SOS feature (requiring sustained, deliberate interaction) directly informed our error prevention approach</li>
                   </ul>
  
-                  <h3 id="iterations" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600 }}>Design iterations</h3>
+                  <h3 id="iterations" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600, transition: 'color 0.3s' }}>Design iterations</h3>
                   
                   <div style={{marginBottom: '10px'}}>
-                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Iteration 1</h4>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600, transition: 'color 0.3s' }}>Iteration 1</h4>
                     <ol style={{ marginLeft: '20px'}}>
                       <li style={{ marginBottom: '8px' }}>Introduced a map-centric home page</li>
                       <li style={{ marginBottom: '8px' }}>Established a pink color scheme</li>
@@ -630,16 +727,16 @@ export default function App() {
                   </div>
  
                   <div style={{ marginBottom: '10px' }}>
-                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Iteration 2</h4>
-                    <ol style={{ marginLeft: '20px', color: '#fff' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600, transition: 'color 0.3s' }}>Iteration 2</h4>
+                    <ol style={{ marginLeft: '20px' }}>
                       <li style={{ marginBottom: '8px' }}>Doubled down on the pink color scheme</li>
                       <li style={{ marginBottom: '8px' }}>Increased touch target and font sizes for better ergonomics</li>
                     </ol>
                   </div>
  
                   <div style={{ marginBottom: '30px' }}>
-                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Iteration 3</h4>
-                    <ol style={{ marginLeft: '20px', color: '#fff' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600, transition: 'color 0.3s' }}>Iteration 3</h4>
+                    <ol style={{ marginLeft: '20px' }}>
                       <li style={{ marginBottom: '8px' }}>Replaced pink palette after it failed WCAG contrast standards</li>
                       <li style={{ marginBottom: '8px' }}>Swapped column layout for a scrollable layout on contact/profile editing</li>
                       <li style={{ marginBottom: '8px' }}>Added confirmation alerts for SOS and edit actions to prevent errors</li>
@@ -654,8 +751,8 @@ export default function App() {
                   </div>
  
                   <div style={{ marginBottom: '40px' }}>
-                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600 }}>Final</h4>
-                    <ol style={{ marginLeft: '20px', color: '#fff' }}>
+                    <h4 style={{ fontSize: 'clamp(18px, 2vw, 20px)', marginBottom: '12px', fontWeight: 600, transition: 'color 0.3s' }}>Final</h4>
+                    <ol style={{ marginLeft: '20px' }}>
                       <li style={{ marginBottom: '8px' }}>Dropped Life360-style map view selector in favor of a cleaner button approach</li>
                       <li style={{ marginBottom: '8px' }}>Added safeguards to the delete account flow</li>
                     </ol>
@@ -665,7 +762,7 @@ export default function App() {
                       height: 'auto',
                       borderRadius: '12px',
                       marginBottom: '10px'
-                    }} alt="Sorora app design iteration three" />
+                    }} alt="Sorora app final design" />
                     {/* <img src={deleteAcctGif} style={{ 
                       width: '50%',
                       height: 'auto',
@@ -675,7 +772,7 @@ export default function App() {
 
                   </div>
  
-                  <h3 id="impact" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600 }}>Impact</h3>
+                  <h3 id="impact" style={{ fontSize: 'clamp(24px, 3vw, 32px)', marginTop: '50px', marginBottom: '20px', fontWeight: 600, transition: 'color 0.3s' }}>Impact</h3>
                   <p style={{ marginBottom: '30px' }}>
                     The redesign produced measurable gains across accessibility, ergonomics, and user performance:
                   </p>
@@ -687,17 +784,17 @@ export default function App() {
                     marginBottom: '30px',
                     paddingBottom: '50px'
                   }}>
-                    <div style={{ backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '12px' }}>
+                    <div style={{ backgroundColor: c.sectionBg, padding: '30px', borderRadius: '12px', transition: 'background-color 0.3s' }}>
                       <div style={{ fontSize: 'clamp(36px, 5vw, 48px)', fontWeight: 700, marginBottom: '12px', color: '#4ade80' }}>5.41:1</div>
-                      <div style={{ fontSize: '14px', color: '#fff' }}>Avg. color contrast — up from 3.31:1 to meet WCAG AA minimums</div>
+                      <div style={{ fontSize: '14px', color: c.text, transition: 'color 0.3s' }}>Avg. color contrast — up from 3.31:1 to meet WCAG AA minimums</div>
                     </div>
-                    <div style={{ backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '12px' }}>
+                    <div style={{ backgroundColor: c.sectionBg, padding: '30px', borderRadius: '12px', transition: 'background-color 0.3s' }}>
                       <div style={{ fontSize: 'clamp(36px, 5vw, 48px)', fontWeight: 700, marginBottom: '12px', color: '#4ade80' }}>48px</div>
-                      <div style={{ fontSize: '14px', color: '#fff' }}>Avg. touch target size — up from 40.5px minimum</div>
+                      <div style={{ fontSize: '14px', color: c.text, transition: 'color 0.3s' }}>Avg. touch target size — up from 40.5px minimum</div>
                     </div>
-                    <div style={{ backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '12px' }}>
+                    <div style={{ backgroundColor: c.sectionBg, padding: '30px', borderRadius: '12px', transition: 'background-color 0.3s' }}>
                       <div style={{ fontSize: 'clamp(36px, 5vw, 48px)', fontWeight: 700, marginBottom: '12px', color: '#4ade80' }}>−70%</div>
-                      <div style={{ fontSize: '14px', color: '#fff' }}>Task completion time — down from 2:48 to 0:51 average</div>
+                      <div style={{ fontSize: '14px', color: c.text, transition: 'color 0.3s' }}>Task completion time — down from 2:48 to 0:51 average</div>
                     </div>
                   </div>
                 </div>
