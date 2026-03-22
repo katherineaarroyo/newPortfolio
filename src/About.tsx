@@ -118,15 +118,15 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
           >
             <p style={{ marginBottom: "20px" }}>
               My name is Katherine Arroyo and I'm an aspiring product designer
-              with a background in computer science and design. I recently
-              graduated with a Bachelor of Arts in{" "}
+              with a background in computer science and design. I will be
+              graduating with a Bachelor of Arts in{" "}
               <em style={{ color: c.subtitle }}>
                 {" "}
                 Computer Science - Web Development
               </em>{" "}
               and a minor in{" "}
               <em style={{ color: c.subtitle }}>Web and New Media Design</em> at
-              Southern Adventist University in Tennessee.
+              Southern Adventist University in May 2026.
             </p>
             <p style={{ marginBottom: "20px" }}>
               I've worked on an end-to-end product experience, building off
@@ -191,12 +191,22 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
               boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
               border: `.25px solid ${c.navBorder}`,
               borderRadius: "50px",
-              padding: "12px 30px",
+              padding: "10px 30px",
               display: "flex",
               gap: "30px",
               transition: "all 0.3s",
             }}
-          >
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = c.text;
+              const link = e.currentTarget.querySelector('a') as HTMLElement;
+              if (link) link.style.color = c.bg;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = c.navBg;
+              const link = e.currentTarget.querySelector('a') as HTMLElement;
+              if (link) link.style.color = c.text;
+            }}
+        >
             <a
               onClick={(e) => {
                 e.preventDefault();
@@ -231,8 +241,15 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
                 borderRadius: "8px",
                 marginBottom: "16px",
                 overflow: "hidden",
-                border: `1px solid ${c.cardBorder}`,
-                transition: "all 0.3s",
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
               <img
@@ -267,8 +284,15 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
                 borderRadius: "8px",
                 marginBottom: "16px",
                 overflow: "hidden",
-                border: `1px solid ${c.cardBorder}`,
-                transition: "all 0.3s",
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
               <img
@@ -302,8 +326,15 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
                 borderRadius: "8px",
                 marginBottom: "16px",
                 overflow: "hidden",
-                border: `1px solid ${c.cardBorder}`,
-                transition: "all 0.3s",
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
               <img

@@ -1,5 +1,6 @@
 import "./App.css";
 import About from "./About";
+import Design from "./Design";
 
 import profilePicLight from "./assets/work/profile_light.png";
 import profilePicDark from "./assets/work/profile_dark.png";
@@ -1438,6 +1439,14 @@ export default function App() {
         {/* About Page */}
         {currentPage === "about" && (
           <About 
+            theme={theme}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
+
+        {/* Design Page */}
+        {currentPage === "design" && (
+          <Design 
             theme={theme}
             setCurrentPage={setCurrentPage}
           />
