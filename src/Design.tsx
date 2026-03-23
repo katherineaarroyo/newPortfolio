@@ -4,10 +4,9 @@ import asamiMatcha from "./assets/design/asamiMatcha.png";
 
 interface DesignProps {
   theme: "light" | "dark";
-  setCurrentPage: (page: "work" | "about" | "design") => void;
 }
 
-export default function Design({ theme, setCurrentPage }: DesignProps) {
+export default function Design({ theme }: DesignProps) {
   const colors = {
     light: {
       bg: "#f5f5f5",

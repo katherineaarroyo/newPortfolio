@@ -1472,7 +1472,6 @@ export default function App() {
         {currentPage === "design" && (
           <Design 
             theme={theme}
-            setCurrentPage={setCurrentPage}
           />
         )}
       </main>
