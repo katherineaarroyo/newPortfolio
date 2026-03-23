@@ -28,7 +28,21 @@ export default function App() {
     return "light";
   });
 
-  // device preference changes
+  // favicon color mode
+  useEffect(() => {
+    const favicon = document.querySelector("link[rel='icon']") as HTMLLinkElement;
+    
+    if (!favicon) {
+      const newFavicon = document.createElement('link');
+      newFavicon.rel = 'icon';
+      newFavicon.href = theme === 'dark' ? '/favicon_dark.png' : '/favicon_light.png';
+      document.head.appendChild(newFavicon);
+    } else {
+      favicon.href = theme === 'dark' ? '/favicon_dark.png' : '/favicon_light.png';
+    }
+  }, [theme]);
+
+  // device color mode preferences
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = (e: MediaQueryListEvent) => {
@@ -86,6 +100,16 @@ export default function App() {
     document.body.style.backgroundColor = c.bg;
     document.body.style.transition = "background-color 0.3s";
   }, [theme, c.bg]);
+
+  useEffect(() => {
+    const titles = {
+      work: 'Katherine Arroyo',
+      about: 'About | Katherine Arroyo',
+      design: 'Design | Katherine Arroyo'
+    };
+    
+    document.title = titles[currentPage] || 'Katherine Arroyo';
+  }, [currentPage]);
 
   useEffect(() => {
     if (!isModalOpen) return;
