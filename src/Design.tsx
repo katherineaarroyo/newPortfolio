@@ -142,7 +142,7 @@ export default function Design({ theme }: DesignProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  fontSize: "16px",
+                  fontSize: "clamp(12px, 1.6vw, 18px)",
                   color: c.text,
                   textDecoration: "underline",
                   transition: "color 0.3s",
@@ -221,7 +221,7 @@ export default function Design({ theme }: DesignProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  fontSize: "16px",
+                  fontSize: "clamp(12px, 1.6vw, 18px)",
                   color: c.text,
                   textDecoration: "underline",
                   transition: "color 0.3s",
@@ -299,7 +299,7 @@ export default function Design({ theme }: DesignProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    fontSize: "16px",
+                    fontSize: "clamp(12px, 1.6vw, 18px)",
                     color: c.text,
                     textDecoration: "underline",
                     transition: "color 0.3s",
