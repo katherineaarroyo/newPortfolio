@@ -382,16 +382,42 @@ export default function Home({ theme }: HomeProps) {
           gap: "20px",
         }}
       >
-        <h2
+        <div
           style={{
-            fontSize: "clamp(28px, 4vw, 36px)",
-            fontWeight: 600,
-            margin: 0,
-            transition: "color 0.3s",
-          }}
-        >
-          Let's get in touch.
-        </h2>
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
+          <h2
+            style={{
+              fontSize: "clamp(28px, 4vw, 36px)",
+              fontWeight: 600,
+              margin: 0,
+              transition: "color 0.3s",
+            }}
+          >
+            Let's get in touch.
+          </h2>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "20px",
+            }}
+          >
+            <a
+              href="mailto:katherineannearroyo@gmail.com"
+              style={{ color: c.text, textDecoration: "underline" }}
+            >
+              Email
+            </a>
+            <a
+              href="https://linkedin.com/in/katherineannearroyo"
+              style={{ color: c.text, textDecoration: "underline" }}
+            >
+              LinkedIn
+            </a>
+          </div>
+        </div>
         <div
           style={{
             width: "60px",

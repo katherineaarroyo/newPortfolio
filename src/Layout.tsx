@@ -7,13 +7,8 @@ interface LayoutProps {
   toggleTheme: () => void;
 }
 
-export default function Main({
-  children,
-  theme,
-  toggleTheme,
-}: LayoutProps) {
+export default function Main({ children, theme, toggleTheme }: LayoutProps) {
   const location = useLocation();
-
   const colors = {
     light: {
       bg: "#f5f5f5",
