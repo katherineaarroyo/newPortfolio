@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import me from "./assets/about/me.jpg";
 import typefaceCards from "./assets/design/typefaceCards.png";
 import typefaceBooklet from "./assets/design/typefaceBooklet.png";
@@ -5,10 +6,9 @@ import asamiMatcha from "./assets/design/asamiMatcha.png";
 
 interface AboutProps {
   theme: "light" | "dark";
-  setCurrentPage: (page: "work" | "about" | "design") => void;
 }
 
-export default function About({ theme, setCurrentPage }: AboutProps) {
+export default function About({ theme }: AboutProps) {
   const colors = {
     light: {
       bg: "#f5f5f5",
@@ -105,6 +105,7 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
                 width: "100%",
                 height: "100%",
               }}
+              alt="Katherine Arroyo"
             />
           </div>
           {/* Bio Text */}
@@ -207,12 +208,8 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
               if (link) link.style.color = c.text;
             }}
         >
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage("design");
-              }}
-              href="#design"
+            <Link
+              to="/design"
               style={{
                 fontSize: "16px",
                 color: c.text,
@@ -222,7 +219,7 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
               }}
             >
               See More
-            </a>
+            </Link>
           </div>
         </div>
         <div
@@ -259,6 +256,7 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
                   width: "100%",
                   objectFit: "cover",
                 }}
+                alt="Asami Matcha packaging"
               />
             </div>
             <p
@@ -302,6 +300,7 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
                   width: "100%",
                   objectFit: "cover",
                 }}
+                alt="Typeface cardset"
               />
             </div>
             <p
@@ -344,6 +343,7 @@ export default function About({ theme, setCurrentPage }: AboutProps) {
                   width: "100%",
                   objectFit: "cover",
                 }}
+                alt="Typeface comparison booklet"
               />
             </div>
             <p
